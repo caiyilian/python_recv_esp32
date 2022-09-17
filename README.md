@@ -1,2 +1,6 @@
 # python_recv_esp32
 python远程获取esp32的图片
+
+其中CameraWebServer其实是esp32的图传例程
+而python_recv_esp32文件夹中的main.py才是python获取esp32的程序
+记得按照requirements.txt下载相关依赖
