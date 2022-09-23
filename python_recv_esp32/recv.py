@@ -30,16 +30,14 @@ def subscribe(client: mqtt_client):
         if msg.topic == "Wechat2Esp/start":
             recList = []
         elif msg.topic == "Wechat2Esp/end":
+            # client.publish("esp32Ready", "")
             total = "".join(recList)
             Bytes = total.encode('utf8')
             array = np.frombuffer(base64.b64decode(Bytes), dtype=np.uint8)
             cv2.imshow('img', cv2.imdecode(array, cv2.IMREAD_COLOR))
-            client.publish("esp32Ready", "")
             cv2.waitKey(1)
         else:
             recList.append(msg.payload.decode())
-
-
     client.subscribe(topic)
     client.on_message = on_message
 

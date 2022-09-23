@@ -14,8 +14,8 @@ client_id = f'python-mqtt-{random.randint(0, 1000)}'
 mode = "win"
 if mode == 'win':
     cap = cv2.VideoCapture(0)
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 256)  # 设置宽度
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 192)  # 设置长度
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)  # 设置宽度
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)  # 设置长度
 elif mode == 'esp32':
     url = "http://192.168.1.102:81/stream"
     res = requests.get(url, stream=True)
@@ -58,9 +58,10 @@ def sendVideo():
 
 def subscribe(client: mqtt_client):
     def on_message(client, userdata, msg):
+        start = time.time()
         sendList = sendVideo()
         publish(client, sendList)
-
+        print(time.time()-start)
     client.subscribe("esp32Ready")
     client.on_message = on_message
 
@@ -89,9 +90,10 @@ def runByEsp32():
 def runByWin():
     client = connect_mqtt()
     subscribe(client)
-    sendList = sendVideo()
-    publish(client, sendList)
-    client.loop_forever()
+    while True:
+        sendList = sendVideo()
+        publish(client, sendList)
+    # client.loop_forever()
     # 发送
 
 
