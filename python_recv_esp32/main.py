@@ -1,9 +1,9 @@
 import requests
 import cv2
 import numpy as np
-
+import base64
 # 192.168.1.113是你的esp32返回的服务器ip地址
-url = "http://192.168.1.113:81/stream"
+url = "http://192.168.1.102:81/stream"
 res = requests.get(url, stream=True)
 
 while True:
@@ -13,6 +13,9 @@ while True:
         length = res.raw.readline()[16:-2]
         res.raw.readline()
         # 在这之前都是类似于响应头，这些信息用处不大，除了那个长度，下面这个才是整个图片
+        # imgData = res.raw.read(int(length))
+        # print(imgData)
+        # print((base64.b64encode(imgData)).decode('utf8'))
         img = cv2.imdecode(np.frombuffer(res.raw.read(int(length)), dtype=np.uint8), cv2.IMREAD_COLOR)
         cv2.imshow("img", img)
         cv2.waitKey(1)
